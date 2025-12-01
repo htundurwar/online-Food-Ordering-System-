@@ -1,0 +1,517 @@
+-- creating database 
+CREATE DATABASE OnlineFoodOrderingSystem;
+-- using database 
+USE OnlineFoodOrderingSystem;
+-- creating a table users 
+CREATE TABLE Users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(15),
+    address VARCHAR(255),
+    role ENUM('customer', 'delivery') DEFAULT 'customer',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+-- creating a restaurant table 
+CREATE TABLE Restaurants (
+    restaurant_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    address VARCHAR(255),
+    phone VARCHAR(15),
+    -- decimal(p,s) p = total digits s = decimal after digits ex-7.8
+    rating DECIMAL(2,1) DEFAULT 0.0
+);
+-- creating menu table 
+CREATE TABLE Menu (
+    item_id INT PRIMARY KEY AUTO_INCREMENT,
+    restaurant_id INT,
+    item_name VARCHAR(100) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    is_available BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (restaurant_id) REFERENCES Restaurants(restaurant_id)
+); 
+-- creating order table 
+CREATE TABLE Orders (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    restaurant_id INT,
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('pending', 'confirmed', 'preparing', 'out_for_delivery', 'delivered', 'cancelled') DEFAULT 'pending',
+    total_amount DECIMAL(10,2),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (restaurant_id) REFERENCES Restaurants(restaurant_id)
+);
+-- creating a table orderItems 
+CREATE TABLE OrderItems (
+    order_item_id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT,
+    item_id INT,
+    quantity INT DEFAULT 1,
+    price DECIMAL(10,2),
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (item_id) REFERENCES Menu(item_id)
+);
+INSERT INTO Users (name, email, phone, address, role, created_at) VALUES
+('Ravi Kumar', 'ravi1@gmail.com', '9876543210', 'Nagpur, Maharashtra', 'customer', '2025-09-11 10:15:30'),
+('Priya Sharma', 'priya2@gmail.com', '9123456780', 'Pune, Maharashtra', 'delivery', '2025-09-10 14:22:10'),
+('Amit Verma', 'amit3@gmail.com', '9988776655', 'Mumbai, Maharashtra', 'customer', '2025-09-09 18:45:55'),
+('Sneha Patil', 'sneha4@gmail.com', '9012345678', 'Nagpur, Maharashtra', 'customer', '2025-09-08 11:05:40'),
+('Rahul Joshi', 'rahul5@gmail.com', '9345678901', 'Delhi, India', 'delivery', '2025-09-07 09:30:20'),
+('Neha Gupta', 'neha6@gmail.com', '9786543210', 'Hyderabad, Telangana', 'customer', '2025-09-06 16:20:10'),
+('Ankit Tiwari', 'ankit7@gmail.com', '9456123789', 'Bhopal, Madhya Pradesh', 'customer', '2025-09-06 19:40:55'),
+('Pooja Yadav', 'pooja8@gmail.com', '9654781230', 'Lucknow, Uttar Pradesh', 'delivery', '2025-09-05 08:35:15'),
+('Vikas Mehta', 'vikas9@gmail.com', '9765432109', 'Chennai, Tamil Nadu', 'customer', '2025-09-04 21:05:05'),
+('Divya Singh', 'divya10@gmail.com', '9234567890', 'Indore, Madhya Pradesh', 'customer', '2025-09-04 11:55:45'),
+('Arjun Reddy', 'arjun11@gmail.com', '9345098765', 'Hyderabad, Telangana', 'delivery', '2025-09-03 13:12:25'),
+('Kavita Deshmukh', 'kavita12@gmail.com', '9011223344', 'Nagpur, Maharashtra', 'customer', '2025-09-02 17:42:50'),
+('Mohit Jain', 'mohit13@gmail.com', '9112233445', 'Bangalore, Karnataka', 'customer', '2025-09-01 20:15:15'),
+('Shreya Kulkarni', 'shreya14@gmail.com', '9223344556', 'Pune, Maharashtra', 'delivery', '2025-08-31 12:22:05'),
+('Rohan Nair', 'rohan15@gmail.com', '9334455667', 'Kochi, Kerala', 'customer', '2025-08-30 15:40:55'),
+('Meena Iyer', 'meena16@gmail.com', '9445566778', 'Chennai, Tamil Nadu', 'customer', '2025-08-29 19:11:20'),
+('Saurabh Pandey', 'saurabh17@gmail.com', '9556677889', 'Varanasi, Uttar Pradesh', 'delivery', '2025-08-28 08:05:55'),
+('Anjali Das', 'anjali18@gmail.com', '9667788990', 'Kolkata, West Bengal', 'customer', '2025-08-27 11:45:30'),
+('Karan Malhotra', 'karan19@gmail.com', '9778899001', 'Delhi, India', 'customer', '2025-08-26 14:32:50'),
+('Ritika Kapoor', 'ritika20@gmail.com', '9889900112', 'Mumbai, Maharashtra', 'delivery', '2025-08-25 18:15:40'),
+('Nitin Saxena', 'nitin21@gmail.com', '9991001223', 'Noida, Uttar Pradesh', 'customer', '2025-08-24 09:25:10'),
+('Alok Tripathi', 'alok22@gmail.com', '9100112233', 'Kanpur, Uttar Pradesh', 'customer', '2025-08-23 20:20:30'),
+('Seema Mishra', 'seema23@gmail.com', '9211223344', 'Patna, Bihar', 'delivery', '2025-08-22 16:35:45'),
+('Deepak Rai', 'deepak24@gmail.com', '9322334455', 'Jaipur, Rajasthan', 'customer', '2025-08-21 12:55:55'),
+('Pallavi Ghosh', 'pallavi25@gmail.com', '9433445566', 'Kolkata, West Bengal', 'customer', '2025-08-20 18:22:35'),
+('Ashok Menon', 'ashok26@gmail.com', '9544556677', 'Kochi, Kerala', 'delivery', '2025-08-19 21:15:15'),
+('Geeta Joshi', 'geeta27@gmail.com', '9655667788', 'Surat, Gujarat', 'customer', '2025-08-18 08:42:25'),
+('Harish Sharma', 'harish28@gmail.com', '9766778899', 'Jaipur, Rajasthan', 'customer', '2025-08-17 13:50:10'),
+('Payal Singh', 'payal29@gmail.com', '9877889900', 'Lucknow, Uttar Pradesh', 'delivery', '2025-08-16 17:55:40'),
+('Ajay Bansal', 'ajay30@gmail.com', '9988990011', 'Delhi, India', 'customer', '2025-08-15 20:35:25'),
+('Swati Chauhan', 'swati31@gmail.com', '9899001122', 'Gurgaon, Haryana', 'customer', '2025-08-14 10:25:45'),
+('Tarun Sethi', 'tarun32@gmail.com', '9788112233', 'Chandigarh, Punjab', 'delivery', '2025-08-13 14:50:30'),
+('Vidya Rao', 'vidya33@gmail.com', '9677223344', 'Hyderabad, Telangana', 'customer', '2025-08-12 18:10:50'),
+('Rakesh Yadav', 'rakesh34@gmail.com', '9566334455', 'Kanpur, Uttar Pradesh', 'customer', '2025-08-11 08:45:55'),
+('Monika Arora', 'monika35@gmail.com', '9455445566', 'Bangalore, Karnataka', 'delivery', '2025-08-10 12:30:20'),
+('Gaurav Khanna', 'gaurav36@gmail.com', '9344556677', 'Mumbai, Maharashtra', 'customer', '2025-08-09 19:15:40'),
+('Anusha Pillai', 'anusha37@gmail.com', '9233667788', 'Trivandrum, Kerala', 'customer', '2025-08-08 09:55:10'),
+('Siddharth Jain', 'siddharth38@gmail.com', '9122778899', 'Indore, Madhya Pradesh', 'delivery', '2025-08-07 15:40:55'),
+('Poonam Kaur', 'poonam39@gmail.com', '9011889900', 'Amritsar, Punjab', 'customer', '2025-08-06 17:55:15'),
+('Arvind Patel', 'arvind40@gmail.com', '9900112233', 'Ahmedabad, Gujarat', 'customer', '2025-08-05 21:25:35'),
+('Bhavna Shah', 'bhavna41@gmail.com', '9811223344', 'Surat, Gujarat', 'delivery', '2025-08-04 13:10:25'),
+('Manoj Agarwal', 'manoj42@gmail.com', '9722334455', 'Jaipur, Rajasthan', 'customer', '2025-08-03 19:55:50'),
+('Smita Rani', 'smita43@gmail.com', '9633445566', 'Patna, Bihar', 'customer', '2025-08-02 08:40:15'),
+('Vivek Krishnan', 'vivek44@gmail.com', '9544556677', 'Chennai, Tamil Nadu', 'delivery', '2025-08-01 11:55:40'),
+('Tanvi Sharma', 'tanvi45@gmail.com', '9455667788', 'Delhi, India', 'customer', '2025-07-31 14:15:55'),
+('Lokesh Nanda', 'lokesh46@gmail.com', '9366778899', 'Nagpur, Maharashtra', 'customer', '2025-07-30 16:45:30'),
+('Rekha Bhatia', 'rekha47@gmail.com', '9277889900', 'Pune, Maharashtra', 'delivery', '2025-07-29 18:35:25'),
+('Sanjay Kapoor', 'sanjay48@gmail.com', '9188990011', 'Delhi, India', 'customer', '2025-07-28 20:05:55'),
+('Kiran Rathi', 'kiran49@gmail.com', '9099001122', 'Hyderabad, Telangana', 'customer', '2025-07-27 09:50:35'),
+('Aditya Desai', 'aditya50@gmail.com', '9988112233', 'Ahmedabad, Gujarat', 'delivery', '2025-07-26 12:15:45'),
+('Nisha Aggarwal', 'nisha51@gmail.com', '9877223344', 'Kolkata, West Bengal', 'customer', '2025-07-25 14:55:15'),
+('Rajeev Prasad', 'rajeev52@gmail.com', '9766334455', 'Patna, Bihar', 'customer', '2025-07-24 17:25:40'),
+('Snehal More', 'snehal53@gmail.com', '9655445566', 'Mumbai, Maharashtra', 'delivery', '2025-07-23 20:40:25'),
+('Aakash Jain', 'aakash54@gmail.com', '9544556677', 'Indore, Madhya Pradesh', 'customer', '2025-07-22 10:30:55'),
+('Jyoti Saxena', 'jyoti55@gmail.com', '9433445566', 'Lucknow, Uttar Pradesh', 'customer', '2025-07-21 13:15:45'),
+('Naveen Choudhary', 'naveen56@gmail.com', '9322334455', 'Jaipur, Rajasthan', 'delivery', '2025-07-20 15:40:20'),
+('Komal Kapoor', 'komal57@gmail.com', '9211223344', 'Delhi, India', 'customer', '2025-07-19 19:05:35'),
+('Alisha Khan', 'alisha58@gmail.com', '9100112233', 'Bangalore, Karnataka', 'customer', '2025-07-18 08:55:10'),
+('Dhruv Singh', 'dhruv59@gmail.com', '9991223344', 'Chandigarh, Punjab', 'delivery', '2025-07-17 12:45:55'),
+('Isha Malhotra', 'isha60@gmail.com', '9882334455', 'Noida, Uttar Pradesh', 'customer', '2025-07-16 16:20:25');
+-- to see value perfectly added 
+select * from users;
+-- inserting values in restarant 
+INSERT INTO Restaurants (name, address, phone, rating) VALUES
+('Spice Villa', 'Nagpur, Maharashtra', '9876543210', 4.5),
+('Curry House', 'Pune, Maharashtra', '9123456780', 4.2),
+('Tandoori Treats', 'Mumbai, Maharashtra', '9988776655', 4.0),
+('Royal Biryani', 'Delhi, India', '9012345678', 3.8),
+('Urban Zaika', 'Hyderabad, Telangana', '9345678901', 4.3),
+('Punjabi Rasoi', 'Chandigarh, Punjab', '9786543210', 4.1),
+('South Spice', 'Chennai, Tamil Nadu', '9456123789', 4.4),
+('Taste of India', 'Bangalore, Karnataka', '9654781230', 3.9),
+('Zaika Junction', 'Lucknow, Uttar Pradesh', '9765432109', 4.6),
+('Flavors of Punjab', 'Amritsar, Punjab', '9234567890', 4.2),
+('Bombay Zaika', 'Mumbai, Maharashtra', '9345098765', 4.0),
+('Delhi Tandoor', 'Delhi, India', '9011223344', 3.7),
+('Swaad Sutra', 'Nagpur, Maharashtra', '9112233445', 4.3),
+('Rajasthani Thali', 'Jaipur, Rajasthan', '9223344556', 4.1),
+('Malabar Curry', 'Kochi, Kerala', '9334455667', 4.5),
+('Zaika-E-Zaayka', 'Patna, Bihar', '9445566778', 3.9),
+('Kolkata Rolls', 'Kolkata, West Bengal', '9556677889', 4.2),
+('Haveli Dhaba', 'Ludhiana, Punjab', '9667788990', 4.0),
+('Zaika Express', 'Indore, Madhya Pradesh', '9778899001', 3.8),
+('The Food Point', 'Bhopal, Madhya Pradesh', '9889900112', 4.4),
+('Highway Treats', 'Nagpur, Maharashtra', '9991001223', 4.1),
+('Zaika Tandoor', 'Surat, Gujarat', '9100112233', 4.0),
+('Annapurna Bhojanalaya', 'Varanasi, Uttar Pradesh', '9211223344', 4.5),
+('Taste Junction', 'Noida, Uttar Pradesh', '9322334455', 3.9),
+('Royal Kitchen', 'Delhi, India', '9433445566', 4.2),
+('Kesar Zaika', 'Jodhpur, Rajasthan', '9544556677', 4.1),
+('Flavorsome Rasoi', 'Kanpur, Uttar Pradesh', '9655667788', 4.3),
+('Hot Zaika', 'Pune, Maharashtra', '9766778899', 3.8),
+('Swaad Bhojanalay', 'Indore, Madhya Pradesh', '9877889900', 4.6),
+('The Curry Story', 'Nagpur, Maharashtra', '9988990011', 4.0),
+('Biryani Darbar', 'Hyderabad, Telangana', '9899001122', 4.5),
+('Zaika Rasoi', 'Bangalore, Karnataka', '9788112233', 4.2),
+('Swaad Tandoor', 'Chennai, Tamil Nadu', '9677223344', 4.3),
+('Galli Zaika', 'Delhi, India', '9566334455', 4.1),
+('Zaika Junction 2', 'Mumbai, Maharashtra', '9455445566', 3.7),
+('Royal Thali', 'Surat, Gujarat', '9344556677', 4.4),
+('Flavors Rasoi', 'Lucknow, Uttar Pradesh', '9233667788', 4.0),
+('The Curry Rasoi', 'Patna, Bihar', '9122778899', 3.9),
+('Rasoi Junction', 'Nagpur, Maharashtra', '9011889900', 4.5),
+('Tandoori Rasoi', 'Jaipur, Rajasthan', '9900112233', 4.2),
+('Zaika Rasoi Point', 'Kolkata, West Bengal', '9811223344', 4.1),
+('Food Express', 'Chennai, Tamil Nadu', '9722334455', 3.8),
+('Curry Junction', 'Delhi, India', '9633445566', 4.3),
+('Zaika Rasoi Hut', 'Pune, Maharashtra', '9544556677', 4.0),
+('Taste Rasoi', 'Amritsar, Punjab', '9455667788', 4.4),
+('Royal Rasoi', 'Hyderabad, Telangana', '9366778899', 4.1),
+('Spicy Zaika', 'Mumbai, Maharashtra', '9277889900', 4.2),
+('Highway Zaika', 'Nagpur, Maharashtra', '9188990011', 3.9),
+('Urban Rasoi', 'Delhi, India', '9099001122', 4.5),
+('Swaad Zaika', 'Lucknow, Uttar Pradesh', '9988112233', 4.0),
+('Flavors Junction', 'Kolkata, West Bengal', '9877223344', 4.1),
+('The Thali Point', 'Jaipur, Rajasthan', '9766334455', 4.3),
+('Tandoori Junction', 'Nagpur, Maharashtra', '9655445566', 3.8),
+('Taste Rasoi 2', 'Indore, Madhya Pradesh', '9544556677', 4.4),
+('Royal Curry', 'Delhi, India', '9433445566', 4.2),
+('Zaika Rasoi Express', 'Surat, Gujarat', '9322334455', 4.0),
+('Desi Rasoi', 'Hyderabad, Telangana', '9211223344', 4.3),
+('Urban Curry', 'Nagpur, Maharashtra', '9100112233', 3.9),
+('Curry Rasoi', 'Mumbai, Maharashtra', '9991223344', 4.5),
+('Spice Junction', 'Pune, Maharashtra', '9882334455', 4.1);
+select * from Restaurants;
+-- insertiong value in menu table 
+INSERT INTO Menu (restaurant_id, item_name, price, is_available) VALUES
+(1, 'Paneer Butter Masala', 220.00, TRUE),
+(2, 'Chicken Biryani', 250.00, TRUE),
+(3, 'Veg Pulao', 180.00, TRUE),
+(4, 'Masala Dosa', 120.00, TRUE),
+(5, 'Tandoori Chicken', 300.00, TRUE),
+(6, 'Chole Bhature', 150.00, TRUE),
+(7, 'Idli Sambar', 100.00, TRUE),
+(8, 'Fish Curry', 280.00, TRUE),
+(9, 'Aloo Paratha', 90.00, TRUE),
+(10, 'Rajma Chawal', 160.00, TRUE),
+(11, 'Dal Makhani', 200.00, TRUE),
+(12, 'Pav Bhaji', 140.00, TRUE),
+(13, 'Hyderabadi Biryani', 270.00, TRUE),
+(14, 'Kadhai Paneer', 210.00, TRUE),
+(15, 'Mutton Curry', 320.00, TRUE),
+(16, 'Veg Thali', 180.00, TRUE),
+(17, 'Pani Puri', 60.00, TRUE),
+(18, 'Mysore Masala Dosa', 130.00, TRUE),
+(19, 'Butter Naan', 40.00, TRUE),
+(20, 'Palak Paneer', 190.00, TRUE),
+(21, 'Kofta Curry', 200.00, TRUE),
+(22, 'Egg Curry', 170.00, TRUE),
+(23, 'Veg Momos', 120.00, TRUE),
+(24, 'Chicken Momos', 150.00, TRUE),
+(25, 'Fried Rice', 180.00, TRUE),
+(26, 'Hakka Noodles', 160.00, TRUE),
+(27, 'Schezwan Rice', 190.00, TRUE),
+(28, 'Veg Burger', 120.00, TRUE),
+(29, 'Chicken Burger', 150.00, TRUE),
+(30, 'Cheese Pizza', 220.00, TRUE),
+(31, 'Veg Sandwich', 100.00, TRUE),
+(32, 'Grilled Chicken Sandwich', 140.00, TRUE),
+(33, 'Veg Roll', 80.00, TRUE),
+(34, 'Paneer Roll', 110.00, TRUE),
+(35, 'Chicken Roll', 130.00, TRUE),
+(36, 'Veg Soup', 90.00, TRUE),
+(37, 'Tomato Soup', 100.00, TRUE),
+(38, 'Sweet Corn Soup', 110.00, TRUE),
+(39, 'Manchow Soup', 120.00, TRUE),
+(40, 'Hot & Sour Soup', 130.00, TRUE),
+(41, 'Spring Roll', 150.00, TRUE),
+(42, 'Veg Cutlet', 100.00, TRUE),
+(43, 'Paneer Tikka', 180.00, TRUE),
+(44, 'Chicken Tikka', 220.00, TRUE),
+(45, 'Seekh Kebab', 250.00, TRUE),
+(46, 'Veg Pakora', 80.00, TRUE),
+(47, 'Onion Bhaji', 70.00, TRUE),
+(48, 'Samosa', 50.00, TRUE),
+(49, 'Vada Pav', 40.00, TRUE),
+(50, 'Misal Pav', 120.00, TRUE),
+(51, 'Dhokla', 90.00, TRUE),
+(52, 'Khandvi', 100.00, TRUE),
+(53, 'Thepla', 80.00, TRUE),
+(54, 'Undhiyu', 200.00, TRUE),
+(55, 'Shrikhand', 150.00, TRUE),
+(56, 'Rasgulla', 120.00, TRUE),
+(57, 'Gulab Jamun', 100.00, TRUE),
+(58, 'Jalebi', 90.00, TRUE),
+(59, 'Rabri', 140.00, TRUE),
+(60, 'Ice Cream Sundae', 180.00, TRUE);
+select * from menu;
+-- inserting values in table orders 
+INSERT INTO Orders (user_id, restaurant_id, order_date, status, total_amount) VALUES
+(1, 5, '2025-09-10 10:15:30', 'delivered', 450.00),
+(2, 12, '2025-09-10 11:25:20', 'confirmed', 320.00),
+(3, 8, '2025-09-10 12:05:50', 'preparing', 280.00),
+(4, 20, '2025-09-10 13:45:10', 'pending', 500.00),
+(5, 3, '2025-09-10 14:30:40', 'delivered', 150.00),
+(6, 18, '2025-09-10 15:20:55', 'out_for_delivery', 390.00),
+(7, 7, '2025-09-10 16:10:25', 'confirmed', 220.00),
+(8, 25, '2025-09-10 17:05:15', 'cancelled', 300.00),
+(9, 11, '2025-09-10 18:45:35', 'delivered', 420.00),
+(10, 14, '2025-09-10 19:20:50', 'delivered', 310.00),
+(11, 2, '2025-09-09 10:15:30', 'confirmed', 180.00),
+(12, 30, '2025-09-09 11:25:20', 'pending', 260.00),
+(13, 6, '2025-09-09 12:05:50', 'delivered', 340.00),
+(14, 28, '2025-09-09 13:45:10', 'preparing', 400.00),
+(15, 1, '2025-09-09 14:30:40', 'delivered', 220.00),
+(16, 19, '2025-09-09 15:20:55', 'out_for_delivery', 370.00),
+(17, 21, '2025-09-09 16:10:25', 'confirmed', 450.00),
+(18, 9, '2025-09-09 17:05:15', 'delivered', 300.00),
+(19, 24, '2025-09-09 18:45:35', 'pending', 320.00),
+(20, 16, '2025-09-09 19:20:50', 'delivered', 280.00),
+(21, 13, '2025-09-08 10:15:30', 'confirmed', 350.00),
+(22, 22, '2025-09-08 11:25:20', 'delivered', 400.00),
+(23, 17, '2025-09-08 12:05:50', 'preparing', 210.00),
+(24, 4, '2025-09-08 13:45:10', 'delivered', 380.00),
+(25, 26, '2025-09-08 14:30:40', 'pending', 460.00),
+(26, 23, '2025-09-08 15:20:55', 'out_for_delivery', 290.00),
+(27, 29, '2025-09-08 16:10:25', 'confirmed', 310.00),
+(28, 15, '2025-09-08 17:05:15', 'delivered', 270.00),
+(29, 12, '2025-09-08 18:45:35', 'delivered', 340.00),
+(30, 10, '2025-09-08 19:20:50', 'preparing', 300.00),
+(31, 8, '2025-09-07 10:15:30', 'delivered', 320.00),
+(32, 3, '2025-09-07 11:25:20', 'pending', 250.00),
+(33, 27, '2025-09-07 12:05:50', 'confirmed', 400.00),
+(34, 5, '2025-09-07 13:45:10', 'delivered', 360.00),
+(35, 14, '2025-09-07 14:30:40', 'out_for_delivery', 420.00),
+(36, 9, '2025-09-07 15:20:55', 'delivered', 280.00),
+(37, 1, '2025-09-07 16:10:25', 'pending', 220.00),
+(38, 18, '2025-09-07 17:05:15', 'delivered', 390.00),
+(39, 20, '2025-09-07 18:45:35', 'confirmed', 450.00),
+(40, 11, '2025-09-07 19:20:50', 'delivered', 310.00),
+(41, 7, '2025-09-06 10:15:30', 'preparing', 200.00),
+(42, 15, '2025-09-06 11:25:20', 'delivered', 340.00),
+(43, 2, '2025-09-06 12:05:50', 'pending', 280.00),
+(44, 24, '2025-09-06 13:45:10', 'delivered', 390.00),
+(45, 6, '2025-09-06 14:30:40', 'confirmed', 360.00),
+(46, 30, '2025-09-06 15:20:55', 'delivered', 420.00),
+(47, 19, '2025-09-06 16:10:25', 'out_for_delivery', 300.00),
+(48, 4, '2025-09-06 17:05:15', 'delivered', 310.00),
+(49, 21, '2025-09-06 18:45:35', 'pending', 450.00),
+(50, 13, '2025-09-06 19:20:50', 'delivered', 280.00),
+(51, 16, '2025-09-05 10:15:30', 'confirmed', 390.00),
+(52, 25, '2025-09-05 11:25:20', 'delivered', 360.00),
+(53, 17, '2025-09-05 12:05:50', 'pending', 310.00),
+(54, 8, '2025-09-05 13:45:10', 'delivered', 320.00),
+(55, 26, '2025-09-05 14:30:40', 'out_for_delivery', 400.00),
+(56, 22, '2025-09-05 15:20:55', 'delivered', 450.00),
+(57, 3, '2025-09-05 16:10:25', 'confirmed', 280.00),
+(58, 12, '2025-09-05 17:05:15', 'delivered', 310.00),
+(59, 5, '2025-09-05 18:45:35', 'preparing', 350.00),
+(60, 1, '2025-09-05 19:20:50', 'delivered', 270.00);
+-- checking table orders 
+select * from Orders;
+-- inserting value in orderitems table 
+INSERT INTO OrderItems (order_id, item_id, quantity, price) VALUES
+(1, 5, 2, 600.00),
+(2, 12, 1, 320.00),
+(3, 8, 3, 840.00),
+(4, 20, 1, 500.00),
+(5, 3, 2, 300.00),
+(6, 18, 1, 390.00),
+(7, 7, 2, 440.00),
+(8, 25, 1, 300.00),
+(9, 11, 3, 1260.00),
+(10, 14, 1, 310.00),
+(11, 2, 1, 180.00),
+(12, 30, 2, 520.00),
+(13, 6, 1, 340.00),
+(14, 28, 1, 400.00),
+(15, 1, 2, 440.00),
+(16, 19, 1, 370.00),
+(17, 21, 3, 1350.00),
+(18, 9, 1, 300.00),
+(19, 24, 2, 640.00),
+(20, 16, 1, 280.00),
+(21, 13, 2, 700.00),
+(22, 22, 1, 400.00),
+(23, 17, 1, 210.00),
+(24, 4, 2, 760.00),
+(25, 26, 1, 460.00),
+(26, 23, 2, 580.00),
+(27, 29, 1, 310.00),
+(28, 15, 2, 540.00),
+(29, 12, 1, 340.00),
+(30, 10, 2, 600.00),
+(31, 8, 1, 320.00),
+(32, 3, 1, 250.00),
+(33, 27, 2, 800.00),
+(34, 5, 1, 360.00),
+(35, 14, 2, 840.00),
+(36, 9, 1, 280.00),
+(37, 1, 1, 220.00),
+(38, 18, 2, 780.00),
+(39, 20, 1, 450.00),
+(40, 11, 1, 310.00),
+(41, 7, 2, 400.00),
+(42, 15, 1, 340.00),
+(43, 2, 1, 280.00),
+(44, 24, 2, 780.00),
+(45, 6, 1, 360.00),
+(46, 30, 2, 840.00),
+(47, 19, 1, 300.00),
+(48, 4, 1, 310.00),
+(49, 21, 3, 1350.00),
+(50, 13, 1, 280.00),
+(51, 16, 2, 780.00),
+(52, 25, 1, 360.00),
+(53, 17, 1, 310.00),
+(54, 8, 2, 640.00),
+(55, 26, 1, 400.00),
+(56, 22, 1, 450.00),
+(57, 3, 2, 560.00),
+(58, 12, 1, 310.00),
+(59, 5, 2, 700.00),
+(60, 1, 1, 270.00);
+-- checking OrderItems
+select * from OrderItems;
+
+-- Q1 List all restaurants with their ratings
+SELECT name, rating FROM Restaurants; 
+
+-- Q2 Show all available menu items
+SELECT item_name, price FROM Menu WHERE is_available = TRUE;
+
+-- Q3 Find all orders placed by a specific user 
+SELECT order_id, status, total_amount 
+FROM Orders 
+WHERE user_id = 5;
+
+-- Q4 Get order details of a particular order 
+SELECT oi.order_item_id, m.item_name, oi.quantity, oi.price
+FROM OrderItems oi
+JOIN Menu m ON oi.item_id = m.item_id
+WHERE oi.order_id = 10;
+
+-- Q5 List all restaurants with number of menu items
+SELECT r.name AS restaurant, COUNT(m.item_id) AS total_items
+FROM Restaurants r
+LEFT JOIN Menu m ON r.restaurant_id = m.restaurant_id
+GROUP BY r.name;
+
+-- Q6 Find total orders and total spend of each customer
+SELECT u.name, COUNT(o.order_id) AS total_orders, SUM(o.total_amount) AS total_spent
+FROM Users u
+JOIN Orders o ON u.user_id = o.user_id
+GROUP BY u.user_id, u.name;
+
+-- Q7 Top 5 restaurants with highest rating 
+SELECT name, rating 
+FROM Restaurants 
+ORDER BY rating DESC 
+LIMIT 5;
+
+-- Q8 Get all orders with their restaurant and customer details
+SELECT o.order_id, u.name AS customer, r.name AS restaurant, o.status, o.total_amount
+FROM Orders o
+JOIN Users u ON o.user_id = u.user_id
+JOIN Restaurants r ON o.restaurant_id = r.restaurant_id;
+
+-- Q9 Find the most ordered item
+SELECT m.item_name, SUM(oi.quantity) AS total_sold
+FROM OrderItems oi
+JOIN Menu m ON oi.item_id = m.item_id
+GROUP BY m.item_name
+ORDER BY total_sold DESC
+LIMIT 1;
+
+-- Q10 Find top 3 customers according to their money spend 
+SELECT u.name, SUM(o.total_amount) AS total_spent
+FROM Users u
+JOIN Orders o ON u.user_id = o.user_id
+GROUP BY u.user_id, u.name
+ORDER BY total_spent DESC
+LIMIT 3;
+
+-- Q11 Find average order value per restaurant
+SELECT r.name AS restaurant, AVG(o.total_amount) AS avg_order_value
+FROM Orders o
+JOIN Restaurants r ON o.restaurant_id = r.restaurant_id
+GROUP BY r.name;
+
+-- Q12 Find menu items never ordered
+SELECT m.item_name 
+FROM Menu m
+LEFT JOIN OrderItems oi ON m.item_id = oi.item_id
+WHERE oi.item_id IS NULL;
+
+-- Q13Show revenue generated by each restaurant
+SELECT r.name AS restaurant, SUM(o.total_amount) AS revenue
+FROM Orders o
+JOIN Restaurants r ON o.restaurant_id = r.restaurant_id
+WHERE o.status = 'delivered'
+GROUP BY r.name
+ORDER BY revenue DESC;
+
+-- Q14List customers with the total number of items they ordered and total spend
+SELECT u.user_id, u.name AS customer,
+       SUM(oi.quantity) AS total_items_ordered,
+       SUM(oi.price) AS total_spent
+FROM Users u
+JOIN Orders o ON u.user_id = o.user_id
+JOIN OrderItems oi ON o.order_id = oi.order_id
+GROUP BY u.user_id, u.name
+ORDER BY total_spent DESC;
+
+-- Q15For each restaurant, find the top spending customer 
+SELECT r.name AS restaurant, u.name AS customer, SUM(o.total_amount) AS total_spent
+FROM Orders o
+JOIN Users u ON o.user_id = u.user_id
+JOIN Restaurants r ON o.restaurant_id = r.restaurant_id
+GROUP BY r.restaurant_id, r.name, u.user_id, u.name
+HAVING SUM(o.total_amount) = (
+    SELECT MAX(t.total_spent)
+    FROM (
+        SELECT o2.restaurant_id, o2.user_id, SUM(o2.total_amount) AS total_spent
+        FROM Orders o2
+        GROUP BY o2.restaurant_id, o2.user_id
+    ) t
+    WHERE t.restaurant_id = r.restaurant_id
+);
+
+-- Q16 Find orders where the customer ordered more than 3 unique items
+SELECT o.order_id, u.name AS customer, COUNT(DISTINCT oi.item_id) AS unique_items
+FROM Orders o
+JOIN Users u ON o.user_id = u.user_id
+JOIN OrderItems oi ON o.order_id = oi.order_id
+GROUP BY o.order_id, u.name
+HAVING COUNT(DISTINCT oi.item_id) > 3;
+
+
+-- Q17Find the overall best restaurant (highest revenue generated)
+SELECT r.name AS restaurant, SUM(o.total_amount) AS total_revenue
+FROM Orders o
+JOIN Restaurants r ON o.restaurant_id = r.restaurant_id
+WHERE o.status = 'delivered'
+GROUP BY r.name
+ORDER BY total_revenue DESC
+LIMIT 1;
+
+-- Q18 Find top 5 users who ordered from the highest number of different restaurants
+SELECT u.name AS customer, COUNT(DISTINCT o.restaurant_id) AS unique_restaurants
+FROM Users u
+JOIN Orders o ON u.user_id = o.user_id
+GROUP BY u.user_id, u.name
+ORDER BY unique_restaurants DESC
+LIMIT 5;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
